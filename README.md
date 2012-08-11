@@ -7,7 +7,7 @@ I wrote this library to assist myself and any other unfortunate souls who are st
 
 What is it?
 -----------
-Essentially, it's a replacement for [Jelle Druyt's Schema Importer Extension)(http://www.microsoft.com/belux/msdn/fr/community/columns/jdruyts/wsproxy.mspx) from all the way back in 2005. An enterprising developer [fixed some bugs with it](http://www.alexthissen.nl/blogs/main/archive/2006/07/24/fixing-the-shared-type-schema-importer-extension-for-nullable-value-types.aspx) in 2006, but it remains a maintenance headache.
+Essentially, it's a replacement for [Jelle Druyt's Schema Importer Extension](http://www.microsoft.com/belux/msdn/fr/community/columns/jdruyts/wsproxy.mspx) from all the way back in 2005. An enterprising developer [fixed some bugs with it](http://www.alexthissen.nl/blogs/main/archive/2006/07/24/fixing-the-shared-type-schema-importer-extension-for-nullable-value-types.aspx) in 2006, but it remains a maintenance headache.
 
 This solution does not require any fiddling with machine.config or adding shared type assemblies into the GAC. It operates on the principle of Convention over Configuration; just point it to your build drop for the shared types and it will scan all the assemblies and figure out which types it can use for the proxy.
 
@@ -28,7 +28,7 @@ Second, you'll need to create a WSDL parameters file. You can do probably do thi
       </webReferenceOptions>
     </wsdlParameters>
 	
-Last but not least, use the [wsdl command-line tool](http://msdn.microsoft.com/en-us/library/7h3ystb6.aspx) to generate the proxy. The extension uses an environment variable to determine the probing path; if not specified, it will use the current working directory. So a simple "script" might look like:
+Last but not least, use the [wsdl command-line tool](http://msdn.microsoft.com/en-us/library/7h3ystb6.aspx) to generate the proxy. The extension uses an environment variable called `ConvolvedXmlDiscoveryPath` to determine the probing path; if not specified, it will use the current working directory. So a simple "script" might look like:
 
     SET ConvolvedXmlDiscoveryPath=C:\Projects\MyProject\FooIntegration\bin
 	wsdl /out:C:\Projects\MyProject\FooIntegration\FooService.cs /par:FooParameters.xml http://example.com/foo/service.asmx?wsdl
@@ -38,5 +38,7 @@ If you need to interop using WSE and want to get really fancy, you could put thi
     (Get-Content C:\Projects\MyProject\FooIntegration\FooService.cs) | 
     Foreach-Object {$_ -replace "System\.Web\.Services\.SoapHttpClientProtocol", "Microsoft.Web.Services2.WebServicesClientProtocol"} | 
     Set-Content C:\Projects\MyProject\FooIntegration\FooService.cs
-	
+
+This is particularly helpful if, like most of us, you upgraded to Visual Studio 2010 *in 2010* and don't want to be stuck building your integration libraries in VS 2005 until the end of time.
+
 Enjoy your *almost* painless web references!
