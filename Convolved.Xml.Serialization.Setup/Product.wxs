@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Convolved XML Extensions" Language="1033" Version="1.0.0.0" Manufacturer="Convolved" UpgradeCode="eebad8a5-fb6c-44d4-8156-52927c32d61c">
+    <Package InstallerVersion="200" Compressed="yes" />
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="Convolved" Name="Convolved">
+          <Directory Id="INSTALLLOCATION" Name="Convolved.Xml.Serialization">
+            <Directory Id="GAC" Name="GAC">
+              <Component Id="Component.Convolved.Xml.Serialization.GAC" Guid="*">
+                <File Id="File.Convolved.Xml.Serialization.GAC" Assembly=".net" Name="$(var.Convolved.Xml.Serialization.TargetFileName)" Source="$(var.Convolved.Xml.Serialization.TargetPath)" KeyPath="yes"/>
+              </Component>
+            </Directory>
+            <Component Id="Component.Convolved.Xml.Serialization.Binary" Guid="*">
+              <File Id="File.Convolved.Xml.Serialization.Binary" Name="$(var.Convolved.Xml.Serialization.TargetFileName)" Source="$(var.Convolved.Xml.Serialization.TargetPath)" KeyPath="yes" />
+              <RegistryKey Id="Reg.Convolved.Xml.Serialization.Key" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\Convolved.Xml.Serialization" Action="createAndRemoveOnUninstall">
+                <RegistryValue Id="Reg.Convolved.Xml.Serialization.Value" Type="string" Value="[$Component.Convolved.Xml.Serialization.Binary]"/>
+              </RegistryKey>
+            </Component>
+            <Component Id="Component.Convolved.Xml.Serialization.Symbols" Guid="*">
+              <File Id="File.Convolved.Xml.Serialization.Symbols" Name="$(var.Convolved.Xml.Serialization.TargetName).pdb" Source="$(var.Convolved.Xml.Serialization.TargetDir)$(var.Convolved.Xml.Serialization.TargetName).pdb" KeyPath="yes"/>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <ComponentGroup Id="Convolved.Xml.Serialization">
+      <ComponentRef Id="Component.Convolved.Xml.Serialization.GAC"/>
+      <ComponentRef Id="Component.Convolved.Xml.Serialization.Binary"/>
+      <ComponentRef Id="Component.Convolved.Xml.Serialization.Symbols"/>
+    </ComponentGroup>
+
+    <Feature Id="ProductFeature" Title="Convolved XML Extensions" Level="1">
+      <ComponentGroupRef Id="Convolved.Xml.Serialization" />
+    </Feature>
+  </Product>
+</Wix>
